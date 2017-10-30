@@ -16,7 +16,7 @@ except: os.mkdir(outfolder)
 	
 
 isSignal = False
-if infile.find("Wprime") != -1:
+if infile.find("Wprime") != -1 or infile.find("Bulk") != -1:
 	isSignal  = True
 	outname = "signal"
 	print "Running over signal file"
@@ -47,44 +47,58 @@ def isAncestor(a,p) :
 n_particles = 100
 nConst 	= array.array( 'i', [ 0 ] )
 jflavour= array.array( 'i', [ 0 ] )
-jsd 		= array.array( 'f', [ 0 ] )
+jmass 		= array.array( 'f', [ 0 ] )
+jsd0 		= array.array( 'f', [ 0 ] )
+jsd2 		= array.array( 'f', [ 0 ] )
 je 			= array.array( 'f', [ 0 ] )
 jpt 		= array.array( 'f', [ 0 ] )
 jeta 		= array.array( 'f', [ 0 ] )
 jphi 		= array.array( 'f', [ 0 ] )
-jtau1 	= array.array( 'f', [ 0 ] )
-jtau2 	= array.array( 'f', [ 0 ] )
-E 		= array.array('f', n_particles*[0.])
-pt 		= array.array('f', n_particles*[0.])
-x 		= array.array('f', n_particles*[0.])
-y 		= array.array('f', n_particles*[0.])
-z 		= array.array('f', n_particles*[0.])
-vE 		= array.array('f', [0.])
-vpt 	= array.array('f', [0.])
-vx 		= array.array('f', [0.])
-vy 		= array.array('f', [0.])
-vz 		= array.array('f', [0.])
+jtau21 		= array.array( 'f', [ 0 ] )
+jtau21sd0 	= array.array( 'f', [ 0 ] )
+jtau21sd2 	= array.array( 'f', [ 0 ] )
+jN2sd0 	    = array.array( 'f', [ 0 ] )
+jN2sd2 	    = array.array( 'f', [ 0 ] )
+jN2b2sd0 	= array.array( 'f', [ 0 ] )
+jN2b2sd2 	= array.array( 'f', [ 0 ] )
+E 			= array.array('f', n_particles*[0.])
+pt 			= array.array('f', n_particles*[0.])
+x 			= array.array('f', n_particles*[0.])
+y 			= array.array('f', n_particles*[0.])
+z 			= array.array('f', n_particles*[0.])
+vE 			= array.array('f', [0.])
+vpt 		= array.array('f', [0.])
+vx 			= array.array('f', [0.])
+vy 			= array.array('f', [0.])
+vz 			= array.array('f', [0.])
 
 
-t.Branch('ve' 			, vE,  've/f')
-t.Branch('vpt' 			, vpt, 'vpt/f')
-t.Branch('vpx'			, vx,  'vpx/f')
-t.Branch('vpy'			, vy,  'vpy/f')
-t.Branch('vpz'			, vz,  'vpz/f')
-t.Branch('nconst' 	, nConst, 'nconst/i')
-t.Branch('jflavour' , jflavour, 'jflavour/i')
-t.Branch('jsd' 			, jsd, 'msoftdrop/f')
-t.Branch('je' 			, je, 'je/f')
-t.Branch('jpt' 			, jpt, 'jpt/f')
-t.Branch('jeta' 		, jeta, 'jeta/f')
-t.Branch('jphi' 		, jphi, 'jphi/f')
-t.Branch('jtau1' 		, jtau1, 'jtau1/f')
-t.Branch('jtau2' 		, jtau2, 'jtau2/f')
-t.Branch('pe' 			, E,  'pe[%i]/f'%n_particles)
-t.Branch('ppt' 			, pt, 'ppt[%i]/f'%n_particles)
-t.Branch('ppx'			, x,  'ppx[%i]/f'%n_particles)
-t.Branch('ppy'			, y,  'ppy[%i]/f'%n_particles)
-t.Branch('ppz'			, z,  'ppz[%i]/f'%n_particles)
+t.Branch('ve' 		, vE,  			've/f') #Real Hadronic W
+t.Branch('vpt' 		, vpt, 			'vpt/f')
+t.Branch('vpx'		, vx,  			'vpx/f')
+t.Branch('vpy'		, vy,  			'vpy/f')
+t.Branch('vpz'		, vz,  			'vpz/f')
+t.Branch('nconst' 	, nConst, 		'nconst/i') #Jet variables
+t.Branch('jflavour' , jflavour, 	'jflavour/i')
+t.Branch('jmass' 	, jmass, 		'vmass/f')
+t.Branch('jsd0' 	, jsd0, 		'msoftdrop_beta0/f')
+t.Branch('jsd2' 	, jsd2, 		'msoftdrop_beta2/f')
+t.Branch('je' 		, je, 			'je/f')
+t.Branch('jpt' 		, jpt, 			'jpt/f')
+t.Branch('jeta' 	, jeta, 		'jeta/f')
+t.Branch('jphi' 	, jphi, 		'jphi/f')
+t.Branch('jtau21' 	, jtau21, 		'jtau21/f')
+t.Branch('jtau21sd0', jtau21sd0, 	'jtau21sd0/f')
+t.Branch('jtau21sd2', jtau21sd2, 	'jtau21sd2/f')
+t.Branch('jN2sd0'	, jN2sd0, 		'jN2sd0/f')
+t.Branch('jN2sd2'	, jN2sd2, 		'jN2sd2/f')
+t.Branch('jN2b2sd0'	, jN2b2sd0, 	'jN2b2sd0/f')
+t.Branch('jN2b2sd2'	, jN2b2sd2, 	'jN2b2sd2/f')
+t.Branch('pe' 		, E,  			'pe[%i]/f'%n_particles) #Constituent variables
+t.Branch('ppt' 		, pt, 			'ppt[%i]/f'%n_particles)
+t.Branch('ppx'		, x,  			'ppx[%i]/f'%n_particles)
+t.Branch('ppy'		, y,  			'ppy[%i]/f'%n_particles)
+t.Branch('ppz'		, z,  			'ppz[%i]/f'%n_particles)
 
 
 # load FWlite python libraries
@@ -92,14 +106,15 @@ from DataFormats.FWLite import Handle, Events
 
 handlePruned, labelPruned  = Handle ("std::vector<reco::GenParticle>"),"prunedGenParticles"
 handlePacked, labelPacked  = Handle ("std::vector<pat::PackedGenParticle>"), "packedGenParticles"
-fatjets, fatjetLabel = Handle("std::vector<pat::Jet>"), "slimmedJetsAK8"
+fatjets, fatjetLabel = Handle("std::vector<pat::Jet>"), "selectedPatJetsAK8Puppi"
 
 
-events = Events('dcap://t3se01.psi.ch:22125/' + infile)
+# events = Events('dcap://t3se01.psi.ch:22125/' + infile)
+events = Events(infile)
 
 
 for iev,event in enumerate(events):
-	# if iev >= 150000: break
+	# if iev >= 30000: break
 	if iev % 1000 == 0:print "Event", iev
   
 	event.getByLabel (labelPruned, handlePruned)
@@ -151,24 +166,37 @@ for iev,event in enumerate(events):
 		#Fill tree
 		nConst		[0] = j.numberOfDaughters()
 		jflavour 	[0] = isW
-		if abs(j.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau1"))>1.: #For events with PUPPI Msd = 0.0, PUPPI TAU N = -99999
-			jtau1 		[0] = -2
-			jtau2 		[0] = -2
-		else:
-			jtau1 		[0] = j.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau1")
-			jtau2 		[0] = j.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau2")
+		if j.userFloat("SoftDropBeta0ValueMap:Tau1")==0 or abs(j.userFloat("NjettinessAK8Puppi:tau1"))>1. or abs(j.userFloat("SoftDropBeta0ValueMap:Tau1"))>1. or abs(j.userFloat("SoftDropBeta2ValueMap:Tau1"))>1. or abs(j.userFloat("NjettinessAK8Puppi:tau2"))>1. or abs(j.userFloat("SoftDropBeta0ValueMap:Tau2"))>1. or abs(j.userFloat("SoftDropBeta2ValueMap:Tau2"))>1.: 
+			#For events with PUPPI Msd = 0.0, PUPPI TAU N = -99999
+			print "UHHOOOH!!!! Undefined substructure!!!!!!"
+			continue
+
+		jtau21 			[0] = j.userFloat("NjettinessAK8Puppi:tau2")/j.userFloat("NjettinessAK8Puppi:tau1")
+		jtau21sd0 		[0] = j.userFloat("SoftDropBeta0ValueMap:Tau2")/j.userFloat("SoftDropBeta0ValueMap:Tau1")
+		jtau21sd2 		[0] = j.userFloat("SoftDropBeta2ValueMap:Tau2")/j.userFloat("SoftDropBeta2ValueMap:Tau1")
 		je 				[0] = j.energy()
 		jpt 			[0] = j.pt()
 		jeta 			[0] = j.eta()
 		jphi 			[0] = j.phi()
+		jmass 			[0] = j.mass()
+		jsd0            [0] = j.userFloat("SoftDropBeta0ValueMap:mass")
+		jsd2            [0] = j.userFloat("SoftDropBeta2ValueMap:mass")
 		
-		puppi_softdrop, puppi_softdrop_subjet = ROOT.TLorentzVector() ,ROOT.TLorentzVector() 
-		wSubjets = j.subjets('SoftDropPuppi')
-		for iw,wsub in enumerate( wSubjets ) :
-			puppi_softdrop_subjet.SetPtEtaPhiM(wsub.correctedP4(0).pt(),wsub.correctedP4(0).eta(),wsub.correctedP4(0).phi(),wsub.correctedP4(0).mass())
-			puppi_softdrop+=puppi_softdrop_subjet
-		jsd 			[0] = puppi_softdrop.M()
-
+		ecf3_norm_b1 		= j.userFloat("SoftDropBeta0ValueMap:ECF3b1")/j.userFloat("SoftDropBeta0ValueMap:ECF1b1")
+		ecf2_norm_b1 		= j.userFloat("SoftDropBeta0ValueMap:ECF2b1")/j.userFloat("SoftDropBeta0ValueMap:ECF1b1")
+		ecf3_norm_b2 		= j.userFloat("SoftDropBeta0ValueMap:ECF3b2")/j.userFloat("SoftDropBeta0ValueMap:ECF1b2")
+		ecf2_norm_b2 		= j.userFloat("SoftDropBeta0ValueMap:ECF2b2")/j.userFloat("SoftDropBeta0ValueMap:ECF1b2")
+		                    
+		ecf3_norm_b1_sd     = j.userFloat("SoftDropBeta2ValueMap:ECF3b1")/j.userFloat("SoftDropBeta2ValueMap:ECF1b1")
+		ecf2_norm_b1_sd     = j.userFloat("SoftDropBeta2ValueMap:ECF2b1")/j.userFloat("SoftDropBeta2ValueMap:ECF1b1")
+		ecf3_norm_b2_sd     = j.userFloat("SoftDropBeta2ValueMap:ECF3b2")/j.userFloat("SoftDropBeta2ValueMap:ECF1b2")
+		ecf2_norm_b2_sd     = j.userFloat("SoftDropBeta2ValueMap:ECF2b2")/j.userFloat("SoftDropBeta2ValueMap:ECF1b2")
+		
+		jN2sd0			[0] = ecf3_norm_b1/(ecf2_norm_b1**2)
+		jN2sd2			[0] = ecf3_norm_b1_sd/(ecf2_norm_b1_sd**2)
+		jN2b2sd0		[0] = ecf3_norm_b2/(ecf2_norm_b2**2)
+		jN2b2sd2		[0] = ecf3_norm_b2_sd/(ecf2_norm_b2_sd**2)
+		
 		constituents = []
 		for ida in xrange( j.numberOfDaughters() ) :
 			cand = j.daughter(ida)
