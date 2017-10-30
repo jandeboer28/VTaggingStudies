@@ -99,13 +99,13 @@ process.NjettinessAK8Puppi.cone 				= cms.double(0.8)
 process.NjettinessAK8Puppi.Njets				=cms.vuint32(1,2)
 process.patJetsAK8Puppi.userData.userFloats.src = []
 process.patJetsAK8Puppi.userData.userFloats.src += ['NjettinessAK8Puppi:tau1','NjettinessAK8Puppi:tau2']				 
-process.selectedPatJetsAK8Puppi.cut = cms.string("pt > 200 && mass > 0.1")
+process.selectedPatJetsAK8Puppi.cut = cms.string('pt > 200')
 
 
 
 
 #Beta==0 jets --> TAGGED, used for Tau1
-process.ak8PuppiJetsSoftDropBeta0 = ak8PFJetsPuppiSoftDrop.clone(jetPtMin = fatjet_ptmin, beta = cms.double(0.0)  )
+process.ak8PuppiJetsSoftDropBeta0 = ak8PFJetsPuppiSoftDrop.clone(jetPtMin = 150, beta = cms.double(0.0)  )
 addJetCollection(process, labelName = 'AK8PuppiMMDT',
                  jetSource = cms.InputTag('ak8PuppiJetsSoftDropBeta0'),
                  algo= 'AK', rParam = 0.8,
@@ -121,12 +121,12 @@ process.NjettinessAK8PuppiSoftdropBeta0 						= process.NjettinessAK8Puppi.clone
 process.NjettinessAK8PuppiSoftdropBeta0.src 					= cms.InputTag("ak8PuppiJetsSoftDropBeta0")
 process.patJetsAK8PuppiMMDT.userData.userFloats.src = []
 process.patJetsAK8PuppiMMDT.userData.userFloats.src += ['NjettinessAK8PuppiSoftdropBeta0:tau1','NjettinessAK8PuppiSoftdropBeta0:tau2']				 
-process.selectedPatJetsAK8Puppi.cut = cms.string("pt > 200 && mass > 0.1")
+process.selectedPatJetsAK8PuppiMMDT.cut = cms.string("")
 
 
 
 #Beta==2 jets --> GROOMED, used for Tau2
-process.ak8PuppiJetsSoftDropBeta2 = ak8PFJetsPuppiSoftDrop.clone(jetPtMin = fatjet_ptmin, beta = cms.double(2.0)  )
+process.ak8PuppiJetsSoftDropBeta2 = ak8PFJetsPuppiSoftDrop.clone(jetPtMin = 150, beta = cms.double(2.0)  )
 addJetCollection(process, labelName = 'AK8PuppiSD',
                  jetSource = cms.InputTag('ak8PuppiJetsSoftDropBeta2'),
                  algo= 'AK', rParam = 0.8,
@@ -142,10 +142,7 @@ process.NjettinessAK8PuppiSoftdropBeta2 						= process.NjettinessAK8Puppi.clone
 process.NjettinessAK8PuppiSoftdropBeta2.src 					= cms.InputTag("ak8PuppiJetsSoftDropBeta2")
 process.patJetsAK8PuppiSD.userData.userFloats.src = []
 process.patJetsAK8PuppiSD.userData.userFloats.src += ['NjettinessAK8PuppiSoftdropBeta2:tau1','NjettinessAK8PuppiSoftdropBeta2:tau2']				 
-process.selectedPatJetsAK8PuppiSD.cut = cms.string("pt > 200 && mass > 0.1")
-
-
-
+process.selectedPatJetsAK8PuppiSD.cut = cms.string("")
 
 # Adding energy correlation functions
 
@@ -154,27 +151,18 @@ from RecoJets.JetProducers.ECF_cfi import ECF
 
 process.ak8PFJetsPuppiECFb1 = ECF.clone(src = cms.InputTag( "ak8PFJetsPuppi" )) #Beta1
 process.patJetsAK8Puppi.userData.userFloats.src += ['ak8PFJetsPuppiECFb1:ecf1','ak8PFJetsPuppiECFb1:ecf2','ak8PFJetsPuppiECFb1:ecf3']
-
-
 process.ak8PFJetsPuppiECFb2 = ECF.clone( src = cms.InputTag( "ak8PFJetsPuppi" ), beta = cms.double( 2.0 ) ) #Beta2
 process.patJetsAK8Puppi.userData.userFloats.src += ['ak8PFJetsPuppiECFb2:ecf1','ak8PFJetsPuppiECFb2:ecf2','ak8PFJetsPuppiECFb2:ecf3']
 
-
 # For Softdrop Beta==0 jets
-from RecoJets.JetProducers.ECF_cfi import ECF 
-
 process.ak8PuppiJetsSoftDropBeta0ECFb1 = ECF.clone(src = cms.InputTag( "ak8PuppiJetsSoftDropBeta0" ))
 process.patJetsAK8PuppiMMDT.userData.userFloats.src += ['ak8PuppiJetsSoftDropBeta0ECFb1:ecf1','ak8PuppiJetsSoftDropBeta0ECFb1:ecf2','ak8PuppiJetsSoftDropBeta0ECFb1:ecf3']
-
 process.ak8PuppiJetsSoftDropBeta0ECFb2 = ECF.clone(src = cms.InputTag( "ak8PuppiJetsSoftDropBeta0" ), beta = cms.double( 2.0 ))
 process.patJetsAK8PuppiMMDT.userData.userFloats.src += ['ak8PuppiJetsSoftDropBeta0ECFb2:ecf1','ak8PuppiJetsSoftDropBeta0ECFb2:ecf2','ak8PuppiJetsSoftDropBeta0ECFb2:ecf3']
 
 # For Softdrop Beta==2 jets
-from RecoJets.JetProducers.ECF_cfi import ECF 
-
 process.ak8PuppiJetsSoftDropBeta2ECFb1 = ECF.clone(src = cms.InputTag( "ak8PuppiJetsSoftDropBeta2" ))
 process.patJetsAK8PuppiSD.userData.userFloats.src += ['ak8PuppiJetsSoftDropBeta2ECFb1:ecf1','ak8PuppiJetsSoftDropBeta2ECFb1:ecf2','ak8PuppiJetsSoftDropBeta2ECFb1:ecf3']
-
 process.ak8PuppiJetsSoftDropBeta2ECFb2 = ECF.clone(src = cms.InputTag( "ak8PuppiJetsSoftDropBeta2" ))
 process.patJetsAK8PuppiSD.userData.userFloats.src += ['ak8PuppiJetsSoftDropBeta2ECFb2:ecf1','ak8PuppiJetsSoftDropBeta2ECFb2:ecf2','ak8PuppiJetsSoftDropBeta2ECFb2:ecf3']
 
@@ -334,34 +322,52 @@ process.patJetsAK8Puppi.userData.userFloats.src += [cms.InputTag('SoftDropBeta2V
 #    					   ),
 # )
 
+# process.out = cms.OutputModule("PoolOutputModule",
+# 		fileName=cms.untracked.string(fout),
+#         outputCommands = cms.untracked.vstring('drop *',
+# 					   'keep *_slimmedJetsAK8_*_*',
+# 					   'keep *_selectedPatJetsAK8Puppi_*_*',
+# 					   'keep *_selectedPatJetsAK8PuppiMMDT_*_*',
+# 					   'keep *_selectedPatJetsAK8PuppiSD_*_*', 
+# 					   'keep *_NjettinessAK8Puppi_*_*',
+# 					   'keep *_SoftDropBeta0ValueMap_*_*',
+# 					   'keep *_SoftDropBeta2ValueMap_*_*', CHECKED UNTIL HERE
+# 					   'keep recoGenParticles_*_*_*',
+# 					   'keep patPackedGenParticles_*_*_*',
+# 					   'keep patPackedCandidates_*_*_*',
+# 					   'keep recoPFJets_*_*_*', CHECKED
+
+#
+# 					  'keep *_slimmedJets_*_*',
+# 					  'keep *_slimmedJetsAK8_*_*',
+# 					  'keep *_slimmedJetsPuppi_*_*',
+# 					  'keep *_slimmedJetsAK8PFCHSSoftDropPacked_*_*',
+
+# 					  'keep *_slimmedGenJets_*_*',
+# 					  'keep *_slimmedGenJetsAK8_*_*',
+
+#
+#
+#    					   ),
+# )
+
 process.out = cms.OutputModule("PoolOutputModule",
 		fileName=cms.untracked.string(fout),
         outputCommands = cms.untracked.vstring('drop *',
-					   'keep *_slimmedJetsAK8_*_*',
-					   'keep *_selectedPatJetsAK8Puppi_*_*',
-					   'keep *_selectedPatJetsAK8PuppiMMDT_*_*',
-					   'keep *_selectedPatJetsAK8PuppiSD_*_*',
+					   'keep patJets_slimmedJetsAK8_*_*',
+					   'keep patJets_selectedPatJetsAK8Puppi_*_*',
+					   # 'keep patJets_selectedPatJetsAK8PuppiMMDT_*_*',
+					   # 'keep patJets_selectedPatJetsAK8PuppiSD_*_*',
 					   'keep *_NjettinessAK8Puppi_*_*',
 					   'keep *_SoftDropBeta0ValueMap_*_*',
 					   'keep *_SoftDropBeta2ValueMap_*_*',
-					   'keep recoGenParticles_*_*_*',
-					   'keep patPackedGenParticles_*_*_*',
-					   'keep patPackedCandidates_*_*_*',
-					   'keep recoPFJets_*_*_*',
-					   'keep *_packedPFCandidates_*_*',
-					   
-					  'keep *_slimmedJets_*_*',
-					  'keep *_slimmedJetsAK8_*_*',
-					  'keep *_slimmedJetsPuppi_*_*',
-					  'keep *_slimmedJetsAK8PFCHSSoftDropPacked_*_*',
-					  'keep *_slimmedJetsAK8PFPuppiSoftDropPacked_*_*',
-					  'keep *_packedPFCandidates_*_*',   
-					  'keep *_packedGenParticles_*_*',
-					  'keep *_slimmedGenJets_*_*',
-					  'keep *_slimmedGenJetsAK8_*_*',
-					  'keep *_prunedGenParticles_*_*',
-					  'keep *_offlineSlimmedPrimaryVertices_*_*',
-					   
+					   # 'keep *_ak8PFJetsPuppiValueMap_*_*',
+					   # 'keep *_slimmedJetsAK8PFPuppiSoftDropPacked_*_*',
+					   # 'keep *_packedPFCandidates_*_*',
+					   'keep *_puppi_*_*',   
+					   'keep *_packedGenParticles_*_*',
+					   'keep *_prunedGenParticles_*_*',
+					   'keep *_offlineSlimmedPrimaryVertices_*_*'
 					   
    					   ),
 )
